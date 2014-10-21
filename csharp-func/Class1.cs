@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace csharp_func {
+    public class Timekeeper {
+        public TimeSpan Measure(Action action) {
+            var watch = new Stopwatch();
+            watch.Start();
+            action();
+            return watch.Elapsed;
+        }
+    }
+
     internal static class Program2 {
         private static void Main(string[] args) {
-            var numbers = new[] { 3, 5, 7, 9, 11, 13, 15 };
-            // Passing in the IsPrime function into Find
-            //foreach (var prime in numbers.Find(IsPrime).Take(2)) {
-            foreach (var prime in GetRandomNumbers().Find(IsPrime).Take(2)) {
-                Console.WriteLine(prime);
-            }
+            var timekeeper = new Timekeeper();
+            // Passing in a function to Measure
+            var elapsed = timekeeper.Measure(() => {
+                foreach (var prime in GetRandomNumbers().Find(IsPrime).Take(2)) {
+                    Console.WriteLine(prime);
+                }
+            });
+            Console.WriteLine(elapsed);
         }
 
-        static IEnumerable<int> GetRandomNumbers(){
-            Random rand= new Random();
+        static IEnumerable<int> GetRandomNumbers() {
+            Random rand = new Random();
             // Infinite loop
-            while (true){
+            while (true) {
                 yield return rand.Next(1000);
             }
         }
@@ -36,7 +48,7 @@ namespace csharp_func {
         private static IEnumerable<int> Find(this IEnumerable<int> values, Func<int, bool> test) {
             foreach (var number in values) {
                 Console.WriteLine("Testing {0}", number);
-                if (test(number)){
+                if (test(number)) {
                     yield return number;
                 }
             }
