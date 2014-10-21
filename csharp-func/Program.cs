@@ -4,30 +4,61 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+//var task = new Task<IEnumerable<int>>(() => FindLargePrimes(3, 100));
+
+//var task2 = task.ContinueWith((antecedent) => {
+//    foreach (var number in antecedent.Result) {
+//        Console.WriteLine(number);
+//    }
+//});
+
+//task.Start();
+
+//Console.WriteLine("Doing other work");
+
+//task2.Wait();
+
+
+//var timekeeper = new Timekeeper();
+//var elapsed = timekeeper.Measure(() => FindLargePrimesInParallel(900000, 1000000));
+//Console.WriteLine(elapsed);            
 
 namespace csharp_func {
     static class Program {
-        static void Main2(string[] args) {
+        static void Main(string[] args) {
+            // but no way to get data out at the moment
+            //Parallel.Invoke( new Action[]
+            //    { 
+            //        () => FindLargePrimes(3,100),
+            //        () => FindLargePrimes(101,200),
+
+            //    });
+
+            // Expecting a Task which returns an IEnumerable<int>
             var task = new Task<IEnumerable<int>>(
                 () => FindLargePrimes(3, 100)
-            );
-
+                );
+            // Chaining
             var task2 = task.ContinueWith((antecedent) => {
-                                      foreach (var number in antecedent.Result) {
-                                          Console.WriteLine(number);
-                                      }
-                                  });
+                foreach (var number in antecedent.Result) {
+                    Console.WriteLine(number);
+                }
+            });
 
             task.Start();
-
             Console.WriteLine("Doing other work");
-
+            // Wait until unblocked
             task2.Wait();
+            //foreach (var number in task.Result) {
+            //    Console.WriteLine(number);
+            //}
+
+
 
 
             //var timekeeper = new Timekeeper();
-            //var elapsed = timekeeper.Measure(() => FindLargePrimesInParallel(900000, 1000000));
-            //Console.WriteLine(elapsed);            
+            //var elapsed = timekeeper.Measure(() => FindLargePrimesInParallel(1, 100000));
+            //Console.WriteLine(elapsed);
         }
 
         private static IList<int> FindLargePrimes(int start, int end) {

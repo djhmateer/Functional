@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 
 namespace csharp_func {
     public class Timekeeper {
@@ -14,7 +15,30 @@ namespace csharp_func {
     }
 
     internal static class Program2 {
-        private static void Main(string[] args) {
+        //public static T WithRetry<T>(this Func<T> action) {
+        //    var result = default(T);
+        //    int retryCount = 0;
+
+        //    bool succesful = false;
+        //    do {
+        //        try {
+        //            result = action();
+        //            succesful = true;
+        //        } catch (WebException ex) {
+        //            retryCount++;
+        //        }
+        //    } while (retryCount < 3 && !succesful);
+
+        //    return result;
+        //}
+
+        private static void Main3(string[] args)
+        {
+            var client = new WebClient();
+            Func<string, string> download = url => client.DownloadString(url);
+            // WithRetry before only returned a string ie Func<string>.. now we need to pass it a string ie Func<string, string>
+            //var data = download.WithRetry();
+
             var timekeeper = new Timekeeper();
             // Passing in a function to Measure
             var elapsed = timekeeper.Measure(() => {

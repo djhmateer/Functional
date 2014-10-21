@@ -12,8 +12,7 @@ namespace csharp_func {
                 try {
                     result = action();
                     succesful = true;
-                }
-                catch (WebException ex) {
+                } catch (WebException ex) {
                     retryCount++;
                 }
             } while (retryCount < 3 && !succesful);
